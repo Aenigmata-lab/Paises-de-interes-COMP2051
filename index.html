@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Países de Interés</title>
+    <!--Luis Lorenzo-->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #0d0f14;
+            --surface: #161921;
+            --border: rgba(255,255,255,0.07);
+            --text: #e8eaf0;
+            --muted: #7a7f8e;
+            --accent-brazil: #22c55e;
+            --accent-norway: #3b82f6;
+            --accent-japan: #ef4444;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'DM Sans', sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            padding: 0 20px 80px;
+        }
+
+        /* ── HERO ── */
+        .hero {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 80px 0 60px;
+            text-align: center;
+        }
+
+        .hero-label {
+            display: inline-block;
+            font-size: 11px;
+            font-weight: 500;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: var(--muted);
+            border: 1px solid var(--border);
+            border-radius: 100px;
+            padding: 6px 18px;
+            margin-bottom: 28px;
+        }
+
+        .hero h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(2.4rem, 7vw, 5rem);
+            font-weight: 900;
+            line-height: 1.08;
+            letter-spacing: -0.02em;
+            margin-bottom: 24px;
+        }
+
+        .hero h1 em {
+            font-style: italic;
+            background: linear-gradient(90deg, #a78bfa, #60a5fa);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero p {
+            font-size: 1.1rem;
+            color: var(--muted);
+            max-width: 560px;
+            margin: 0 auto;
+            line-height: 1.7;
+            font-weight: 300;
+        }
+
+        /* ── DIVIDER ── */
+        .divider {
+            max-width: 900px;
+            margin: 0 auto 56px;
+            height: 1px;
+            background: var(--border);
+        }
+
+        /* ── CARDS ── */
+        .cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 24px;
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+
+        .card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            transition: transform 0.35s cubic-bezier(.22,.68,0,1.2),
+                        box-shadow 0.35s ease,
+                        border-color 0.35s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 24px 48px rgba(0,0,0,0.45);
+        }
+
+        /* Colored top bar per country */
+        .card-brazil { border-top: 3px solid var(--accent-brazil); }
+        .card-brazil:hover { border-color: var(--accent-brazil); box-shadow: 0 24px 48px rgba(34,197,94,0.15); }
+
+        .card-norway  { border-top: 3px solid var(--accent-norway); }
+        .card-norway:hover { border-color: var(--accent-norway); box-shadow: 0 24px 48px rgba(59,130,246,0.15); }
+
+        .card-japan   { border-top: 3px solid var(--accent-japan); }
+        .card-japan:hover { border-color: var(--accent-japan); box-shadow: 0 24px 48px rgba(239,68,68,0.15); }
+
+        /* Image placeholder area */
+        .card-img {
+            width: 100%;
+            height: 200px;
+            background: #1e2128;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .card-img img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+
+        .card:hover .card-img img {
+            transform: scale(1.06);
+        }
+
+        /* Flag badge */
+        .flag-badge {
+            position: absolute;
+            bottom: 12px;
+            right: 12px;
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: var(--surface);
+            border: 2px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+        }
+
+        .flag-badge img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 50%;
+        }
+
+        /* No-image fallback */
+        .img-placeholder {
+            font-size: 64px;
+            opacity: 0.15;
+            user-select: none;
+        }
+
+        /* Card body */
+        .card-body {
+            padding: 24px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .card-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.6rem;
+            font-weight: 700;
+            letter-spacing: -0.01em;
+        }
+
+        .card-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            flex-shrink: 0;
+        }
+
+        .card-brazil .card-dot { background: var(--accent-brazil); }
+        .card-norway  .card-dot { background: var(--accent-norway); }
+        .card-japan   .card-dot { background: var(--accent-japan); }
+
+        .card-desc {
+            font-size: 0.93rem;
+            color: var(--muted);
+            line-height: 1.65;
+            font-weight: 300;
+            flex: 1;
+        }
+
+        .card-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            text-decoration: none;
+            padding: 9px 18px;
+            border-radius: 100px;
+            border: 1px solid var(--border);
+            color: var(--text);
+            align-self: flex-start;
+            margin-top: 4px;
+            transition: background 0.2s, border-color 0.2s, color 0.2s;
+        }
+
+        .card-brazil .card-link:hover { background: rgba(34,197,94,0.12); border-color: var(--accent-brazil); color: var(--accent-brazil); }
+        .card-norway  .card-link:hover { background: rgba(59,130,246,0.12); border-color: var(--accent-norway); color: var(--accent-norway); }
+        .card-japan   .card-link:hover { background: rgba(239,68,68,0.12);  border-color: var(--accent-japan);  color: var(--accent-japan); }
+
+        .card-link svg {
+            width: 14px;
+            height: 14px;
+            stroke-width: 2.2;
+        }
+
+        /* ── FOOTER ── */
+        footer {
+            text-align: center;
+            margin-top: 70px;
+            font-size: 12px;
+            color: #3a3e4a;
+            letter-spacing: 0.5px;
+        }
+
+        /* ── FADE-IN ANIMATION ── */
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(28px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+
+        .hero        { animation: fadeUp 0.7s ease both; }
+        .card:nth-child(1) { animation: fadeUp 0.6s 0.15s ease both; }
+        .card:nth-child(2) { animation: fadeUp 0.6s 0.28s ease both; }
+        .card:nth-child(3) { animation: fadeUp 0.6s 0.41s ease both; }
+
+        /* ── RESPONSIVE ── */
+        @media (max-width: 600px) {
+            .hero { padding: 52px 0 40px; }
+            .cards { grid-template-columns: 1fr; gap: 18px; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Hero -->
+    <header class="hero">
+        <span class="hero-label">Geografía & Cultura</span>
+        <h1>Explorando Países<br><em>del Mundo</em></h1>
+        <p>
+            Brasil, Noruega y Japón — tres naciones fascinantes que destacan por su diversidad
+            cultural, belleza natural y características únicas.
+        </p>
+    </header>
+
+    <div class="divider"></div>
+
+    <!-- Cards -->
+    <main class="cards">
+
+        <!-- Brasil -->
+        <article class="card card-brazil">
+            <div class="card-img">
+                <img src="Images Paises/images.jpg" alt="Brasil" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                <span class="img-placeholder" style="display:none;">🌿</span>
+                <div class="flag-badge">
+                    <img src="Images Paises/Banderas/Flag_of_Brazil.svg.png" alt="Bandera de Brasil" onerror="this.parentElement.style.display='none';">
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="card-header">
+                    <h2 class="card-title">Brasil</h2>
+                    <span class="card-dot"></span>
+                </div>
+                <p class="card-desc">
+                    El país más grande de América del Sur, famoso por la selva amazónica,
+                    el carnaval y su extraordinaria biodiversidad.
+                </p>
+                <a class="card-link" href="https://es.wikipedia.org/wiki/Brasil" target="_blank">
+                    Más información
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M7 17L17 7M17 7H7M17 7v10"/></svg>
+                </a>
+            </div>
+        </article>
+
+        <!-- Noruega -->
+        <article class="card card-norway">
+            <div class="card-img">
+                <img src="Images Paises/eab10a73-5297-4536-8761-0c5f15943b79_16-9-discover-aspect-ratio_default_1322755.jpg" alt="Noruega" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                <span class="img-placeholder" style="display:none;">🏔️</span>
+                <div class="flag-badge">
+                    <img src="Images Paises/Banderas/Flag_of_Norway.svg.png" alt="Bandera de Noruega" onerror="this.parentElement.style.display='none';">
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="card-header">
+                    <h2 class="card-title">Noruega</h2>
+                    <span class="card-dot"></span>
+                </div>
+                <p class="card-desc">
+                    Conocida por sus impresionantes fiordos, auroras boreales
+                    y una de las más altas calidades de vida en Europa.
+                </p>
+                <a class="card-link" href="https://es.wikipedia.org/wiki/Noruega" target="_blank">
+                    Más información
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M7 17L17 7M17 7H7M17 7v10"/></svg>
+                </a>
+            </div>
+        </article>
+
+        <!-- Japón -->
+        <article class="card card-japan">
+            <div class="card-img">
+                <img src="Images Paises/shinjuku-kabukichoichibangai02_1200x1069.jpg" alt="Japón" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                <span class="img-placeholder" style="display:none;">🏯</span>
+                <div class="flag-badge">
+                    <img src="Images Paises/Banderas/jp.png" alt="Bandera de Japón" onerror="this.parentElement.style.display='none';">
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="card-header">
+                    <h2 class="card-title">Japón</h2>
+                    <span class="card-dot"></span>
+                </div>
+                <p class="card-desc">
+                    Un país que combina tradición milenaria y vanguardia tecnológica,
+                    famoso por su cultura, gastronomía y ciudades modernas.
+                </p>
+                <a class="card-link" href="https://es.wikipedia.org/wiki/Jap%C3%B3n" target="_blank">
+                    Más información
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M7 17L17 7M17 7H7M17 7v10"/></svg>
+                </a>
+            </div>
+        </article>
+
+    </main>
+
+    <footer>Luis Lorenzo &nbsp;·&nbsp; Países de Interés</footer>
+
+</body>
+</html>
